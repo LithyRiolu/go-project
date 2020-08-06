@@ -12,6 +12,7 @@ Item {
   function copiedAddr() {
     /* make go-qml link to copy address */
     copyTimer.start()
+    QmlBridge.copyAddressClicked()
   }
 
   StashMisc.HelpPopup {
@@ -187,7 +188,16 @@ Item {
         anchors.left: parent.left
         anchors.leftMargin: 20
         font.pixelSize: 12
+
+        Connections {
+          target: QmlBridge
+
+          onDisplayAddress: {
+            address.text = address
+          }
+        }
       }
+
       MouseArea {
         anchors.fill: parent
         onClicked: copiedAddr()
@@ -200,7 +210,6 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        //text: qsTr("COPIED!")
         font.pixelSize: 14
       }
     }

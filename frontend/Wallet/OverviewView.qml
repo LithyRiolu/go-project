@@ -108,6 +108,12 @@ Item {
         anchors.topMargin: 15
         anchors.top: heightTitle.bottom
         font.pixelSize: 14
+
+        Connections {
+          target: QmlBridge
+
+          onDisplayHeights: walletHeight = walletHeight
+        }
       }
 
       Text {
@@ -122,6 +128,12 @@ Item {
         anchors.top: walletHeight.bottom
         anchors.left: nodeHeightTitle.right
         font.pixelSize: 14
+
+        Connections {
+          target: QmlBridge
+
+          onDisplayHeights: nodeHeight = nodeHeight
+        }
       }
 
       Text {
@@ -136,6 +148,12 @@ Item {
         anchors.left: blockchainHeightTitle.right
         anchors.top: nodeHeight.bottom
         font.pixelSize: 14
+
+        Connections {
+          target: QmlBridge
+
+          onDisplayHeights: blockchainHeight = blockchainHeight
+        }
       }
     }
 
@@ -498,7 +516,6 @@ Item {
       }
       border.color: "#444444"
     }
-
 
     Rectangle {
       id: balanceBox

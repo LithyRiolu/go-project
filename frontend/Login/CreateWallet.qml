@@ -1,6 +1,8 @@
 import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import "../Components" as Stash
+import "../Misc" as StashMisc
 
 Item {
   id: loginScreen
@@ -10,6 +12,18 @@ Item {
   function clearData() {
     walletName.text = ""
     walletPass.text = ""
+  }
+
+  StashMisc.ConfirmPassword {
+    id: dialogConfirmPassword
+    x: 200
+    y: 400
+  }
+
+  BusyIndicator {
+    id: busyIndicator
+    anchors.centerIn: parent
+    running: false
   }
 
   Rectangle {
@@ -153,8 +167,15 @@ Item {
       anchors.leftMargin: 20
       anchors.top: walletPassBox.bottom
       anchors.topMargin: 100
-      /* @NOTE: Make true connection so wallet loads with new data */
-      onClicked: stackView.push("../Wallet/Dashboard.qml")
+      onClicked: dialogConfirmPassword.show(false)
+
+      function enteredPasswordConfirmation(passwordConfirmation) {
+        busyIndicator.running = true
+        QmlBridge.createButtonClicked(walletName.text, walletPass.text,
+                                      passwordConfirmation)
+        stackView.push("../Wallet/Dashboard.qml")
+        walletPass.text = ""
+      }
 
       Text {
         text: qsTr("CONFIRM")

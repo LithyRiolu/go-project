@@ -197,7 +197,7 @@ Item {
       id: saveAddr
       x: 101
       width: 200
-      checked: false
+      checked: true
       anchors.top: msgBox.bottom
       anchors.topMargin: 15
       anchors.horizontalCenter: parent.horizontalCenter
@@ -229,10 +229,9 @@ Item {
 
     Stash.TextBox {
       id: saveAddrBox
+      width: 360
       visible: saveAddr.checked
       height: 40
-      anchors.right: parent.right
-      anchors.rightMargin: 40
       anchors.left: parent.left
       anchors.leftMargin: 40
       anchors.top: nameTitle.bottom
@@ -267,7 +266,6 @@ Item {
         id: clearTitle
         x: 68
         y: 336
-        width: 39
         height: 17
         color: "#dddddd"
         text: qsTr("CLEAR")
@@ -289,7 +287,6 @@ Item {
         id: sendTitle
         x: 68
         y: 336
-        width: 39
         height: 17
         color: "#dddddd"
         text: qsTr("SEND")
@@ -299,16 +296,41 @@ Item {
         anchors.top: saveAddr.bottom
       }
     }
+
+    Stash.Button {
+      id: saveBtn
+      y: 511
+      height: 30
+      anchors.left: saveAddrBox.right
+      anchors.leftMargin: 20
+      anchors.right: parent.right
+      anchors.rightMargin: 40
+      visible: saveAddr.checked
+      anchors.top: nameTitle.bottom
+      anchors.topMargin: 20
+
+      Text {
+        id: saveTitle
+        x: 68
+        y: 336
+        height: 17
+        color: "#dddddd"
+        text: qsTr("SAVE")
+        anchors.horizontalCenter: parent.horizontalCenter
+        font.pixelSize: 14
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.top: saveAddr.bottom
+      }
+    }
   }
 }
 
 /*##^##
 Designer {
-    D{i:4;anchors_x:68;anchors_y:88}D{i:5;anchors_x:186;anchors_y:182}D{i:6;anchors_x:68;anchors_y:243}
-D{i:7;anchors_x:230;anchors_y:243}D{i:8;anchors_x:68;anchors_y:283}D{i:9;anchors_x:178;anchors_y:288}
-D{i:10;anchors_x:68;anchors_y:336}D{i:11;anchors_x:166;anchors_y:336}D{i:12;anchors_y:451}
-D{i:17;anchors_x:68;anchors_y:336}D{i:16;anchors_y:557}D{i:19;anchors_x:68;anchors_y:336}
-D{i:18;anchors_y:571}
+    D{i:4;anchors_x:68;anchors_y:88}D{i:6;anchors_x:68;anchors_y:243}D{i:5;anchors_x:186;anchors_y:182}
+D{i:7;anchors_x:230;anchors_y:243}D{i:9;anchors_x:178;anchors_y:288}D{i:8;anchors_x:68;anchors_y:283}
+D{i:10;anchors_x:68;anchors_y:336}D{i:12;anchors_y:451}D{i:11;anchors_x:166;anchors_y:336}
+D{i:17;anchors_x:68;anchors_y:336}D{i:16;anchors_y:557}D{i:18;anchors_y:571}D{i:19;anchors_x:68;anchors_y:336}
 }
 ##^##*/
 
