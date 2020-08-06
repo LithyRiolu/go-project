@@ -23,7 +23,10 @@ var (
 type QmlBridge struct {
 	core.QObject
 
-	// go to qml
+  // Go to QML
+  _ func(walletHeight string, blockchainHeight string,
+         nodeHeight string)    `signal:"displayHeights"`
+
 	_ func(balance string,
 		balanceUSD string) `signal:"displayTotalBalance"`
 	_ func(data string) `signal:"displayAvailableBalance"`
@@ -79,12 +82,16 @@ type QmlBridge struct {
 		address string,
 		paymentID string) `signal:"addSavedAddressToList"`
 
-	// qml to go
+	// QML to Go
+	_ func(filenameWallet string,
+		passwordWallet string,
+		confirmPasswordWallet string)    `slot:"createButtonClicked"`
+  _ func()                           `slot:"copyAddressClicked"`
+
 	_ func(msg string)           `slot:"log"`
 	_ func(transactionID string) `slot:"clickedButtonExplorer"`
 	_ func(url string)           `slot:"goToWebsite"`
 	_ func(transactionID string) `slot:"clickedButtonCopyTx"`
-	_ func()                     `slot:"clickedButtonCopyAddress"`
 	_ func()                     `slot:"clickedButtonCopyKeys"`
 	_ func(stringToCopy string)  `slot:"clickedButtonCopy"`
 	_ func(transferAddress string,
@@ -94,9 +101,6 @@ type QmlBridge struct {
 	_ func()                                           `slot:"clickedButtonBackupWallet"`
 	_ func()                                           `slot:"clickedCloseWallet"`
 	_ func(pathToWallet string, passwordWallet string) `slot:"clickedButtonOpen"`
-	_ func(filenameWallet string,
-		passwordWallet string,
-		confirmPasswordWallet string) `slot:"clickedButtonCreate"`
 	_ func(filenameWallet string,
 		passwordWallet string,
 		privateViewKey string,
@@ -137,7 +141,13 @@ func connectQMLToGOFunctions() {
 		log.Info("QML: ", msg)
 	})
 
-	qmlBridge.ConnectClickedButtonCopyAddress(func() {
+	qmlBridge.ConnectCreateButtonClicked(func(filenameWallet string, passwordWallet string, confirmPasswordWallet string) {
+		go func() {
+			createWalletWithWalletInfo(filenameWallet, passwordWallet, confirmPasswordWallet)
+		}()
+	})
+
+	qmlBridge.ConnectCopyAddressClicked(func() {
 		clipboard.WriteAll(walletdmanager.WalletAddress)
 		qmlBridge.DisplayPopup("Copied!", 1500)
 	})
@@ -188,12 +198,6 @@ func connectQMLToGOFunctions() {
 		go func() {
 			recordPathWalletToDB(pathToWallet)
 			startWalletWithWalletInfo(pathToWallet, passwordWallet)
-		}()
-	})
-
-	qmlBridge.ConnectClickedButtonCreate(func(filenameWallet string, passwordWallet string, confirmPasswordWallet string) {
-		go func() {
-			createWalletWithWalletInfo(filenameWallet, passwordWallet, confirmPasswordWallet)
 		}()
 	})
 

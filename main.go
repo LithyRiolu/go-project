@@ -270,6 +270,11 @@ func getAndDisplayConnectionInfo() {
 	syncingInfo := "wallet: " + walletBlockCountString + " - node: " + localDaemonBlockCountString + "  (" + knownBlockCountString + " blocks - " + strconv.Itoa(peers) + " peers)"
 	qmlBridge.DisplaySyncingInfo(syncing, syncingInfo)
 
+	qmlBridge.DisplayHeights(walletHeight, blockchainHeight, nodeHeight)
+	walletHeight := walletBlockCountString
+	blockchainHeight := knownBlockCountString
+	nodeHeight := localDaemonBlockCountString
+
 	// when not connected to remote node, the knownBlockCount stays at 1. So inform users if there seems to be a connection problem
 	if useRemoteNode {
 		if knownBlockCount == 1 {
