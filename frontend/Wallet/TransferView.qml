@@ -197,7 +197,7 @@ Item {
       id: saveAddr
       x: 101
       width: 200
-      checked: true
+      checked: false
       anchors.top: msgBox.bottom
       anchors.topMargin: 15
       anchors.horizontalCenter: parent.horizontalCenter

@@ -296,6 +296,7 @@ Popup {
       anchors.leftMargin: 20
       anchors.right: exitBtn.left
       anchors.rightMargin: 20
+      onClicked: QmlBridge.clickedCloseWallet()
 
       Text {
         id: element5

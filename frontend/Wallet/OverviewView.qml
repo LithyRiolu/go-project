@@ -474,7 +474,7 @@ Item {
       }
 
       Text {
-        id: walletHeight1
+        id: totalSupply
         color: "#ffa500"
         text: qsTr("123,456,789.000000")
         horizontalAlignment: Text.AlignHCenter
@@ -488,7 +488,7 @@ Item {
       }
 
       Text {
-        id: nodeHeight1
+        id: totalBanked
         color: "#ffa500"
         text: qsTr("123,456,789.000000")
         horizontalAlignment: Text.AlignHCenter
@@ -497,12 +497,12 @@ Item {
         anchors.topMargin: 10
         anchors.rightMargin: 10
         anchors.left: nodeHeightTitle1.right
-        anchors.top: walletHeight1.bottom
+        anchors.top: totalSupply.bottom
         font.pixelSize: 14
       }
 
       Text {
-        id: blockchainHeight1
+        id: totalActive
         color: "#ffa500"
         text: qsTr("123,456,789.000000")
         horizontalAlignment: Text.AlignHCenter
@@ -510,7 +510,7 @@ Item {
         anchors.leftMargin: 10
         anchors.topMargin: 10
         anchors.rightMargin: 10
-        anchors.top: nodeHeight1.bottom
+        anchors.top: totalBanked.bottom
         anchors.left: blockchainHeightTitle1.right
         font.pixelSize: 14
       }
@@ -544,7 +544,7 @@ Item {
       }
 
       Text {
-        id: walletHeightTitle1
+        id: availableBalTitle
         width: 115
         color: "#dddddd"
         text: qsTr("AVAILABLE")
@@ -556,7 +556,7 @@ Item {
       }
 
       Text {
-        id: nodeHeightTitle2
+        id: lockedBalTitle
         width: 115
         color: "#dddddd"
         text: qsTr("LOCKED")
@@ -564,11 +564,11 @@ Item {
         anchors.left: parent.left
         anchors.topMargin: 10
         font.pixelSize: 14
-        anchors.top: walletHeightTitle1.bottom
+        anchors.top: availableBalTitle.bottom
       }
 
       Text {
-        id: blockchainHeightTitle2
+        id: lockedDepositsTitle
         width: 115
         height: 17
         color: "#dddddd"
@@ -577,49 +577,61 @@ Item {
         anchors.left: parent.left
         anchors.topMargin: 10
         font.pixelSize: 14
-        anchors.top: nodeHeightTitle2.bottom
+        anchors.top: lockedBalTitle.bottom
       }
 
       Text {
-        id: walletHeight2
+        id: availableBal
         color: "#ffa500"
         text: qsTr("100,000.000000")
         anchors.leftMargin: 10
-        anchors.left: walletHeightTitle1.right
+        anchors.left: availableBalTitle.right
         anchors.topMargin: 15
         anchors.right: parent.right
         anchors.rightMargin: 10
         font.pixelSize: 14
         horizontalAlignment: Text.AlignHCenter
         anchors.top: heightTitle1.bottom
+        Connections {
+          target: QmlBridge
+          onDisplayAvailableBalance: {
+            textAvailableValue.text = data
+          }
+        }
       }
 
       Text {
-        id: nodeHeight2
+        id: lockedBal
         color: "#ffa500"
         text: qsTr("100,000.000000")
         anchors.leftMargin: 10
-        anchors.left: nodeHeightTitle2.right
+        anchors.left: lockedBalTitle.right
         anchors.topMargin: 10
         anchors.right: parent.right
         anchors.rightMargin: 10
         font.pixelSize: 14
         horizontalAlignment: Text.AlignHCenter
-        anchors.top: walletHeight2.bottom
+        anchors.top: availableBal.bottom
+        Connections {
+          target: QmlBridge
+          onDisplayLockedBalance: {
+            lockedBal.text = data
+          }
+        }
       }
 
       Text {
-        id: blockchainHeight2
+        id: lockedDeposits
         color: "#ffa500"
         text: qsTr("100,000.000000")
         anchors.leftMargin: 10
-        anchors.left: blockchainHeightTitle2.right
+        anchors.left: lockedDepositsTitle.right
         anchors.topMargin: 10
         anchors.right: parent.right
         anchors.rightMargin: 10
         font.pixelSize: 14
         horizontalAlignment: Text.AlignHCenter
-        anchors.top: nodeHeight2.bottom
+        anchors.top: lockedBal.bottom
       }
     }
   }

@@ -1,4 +1,6 @@
 import QtQuick 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Dialogs 1.2
 
 import "../Components" as Stash
 
@@ -10,6 +12,25 @@ Item {
   function clearData() {
     walletFile.text = ""
     walletPass.text = ""
+  }
+
+  BusyIndicator {
+    id: busyIndicator
+    anchors.centerIn: parent
+    running: false
+  }
+
+  FileDialog {
+    id: dialogChooseWalletFile
+    title: "Please select your wallet file"
+    visible: false
+    onAccepted: {
+      walletFile.text = dialogChooseWalletFile.fileUrl
+    }
+
+    function show() {
+      dialogChooseWalletFile.open()
+    }
   }
 
   Rectangle {
@@ -66,10 +87,7 @@ Item {
       MouseArea {
         id: mouseArea
         anchors.fill: parent
-
-
-        /* @NOTE: This onClicked() function needs to load a file explorer
-         * to find the wallet file */
+        onClicked: dialogChooseWalletFile.show()
       }
     }
 
@@ -162,8 +180,12 @@ Item {
       anchors.leftMargin: 20
       anchors.top: walletPassBox.bottom
       anchors.topMargin: 100
-      /* @NOTE: Make true connection so wallet loads with new data */
-      onClicked: stackView.push("../Wallet/Dashboard.qml")
+      onClicked: {
+        busyIndicator.running = true
+        QmlBridge.clickedButtonOpen(walletFile.text, walletPass.text)
+        walletPass.text = ""
+        stackView.push("../Wallet/Dashboard.qml")
+      }
 
       Text {
         text: qsTr("CONFIRM")

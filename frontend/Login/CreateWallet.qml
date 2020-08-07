@@ -14,10 +14,30 @@ Item {
     walletPass.text = ""
   }
 
+  Connections {
+    target: QmlBridge
+
+    onDisplayWalletCreationLocation: {
+      walletName.text = walletLocation
+    }
+
+    onFinishedCreatingWallet: {
+      busyIndicator.running = false
+    }
+  }
+
   StashMisc.ConfirmPassword {
     id: dialogConfirmPassword
     x: 200
     y: 400
+    onAccepted: confirmBtn.enteredPasswordConfirmation(walletPass.text)
+
+    function show(isImporting) {
+      walletIsImporting = isImporting
+      dialogConfirmPassword.open()
+      walletPass.text = ""
+      walletPass.focus = true
+    }
   }
 
   BusyIndicator {

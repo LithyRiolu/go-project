@@ -41,21 +41,4 @@ Dialog {
       font.family: "Arial"
     }
   }
-
-  function show(isImporting) {
-    walletIsImporting = isImporting
-    dialogConfirmPassword.open()
-    textInputConfirmPassword.text = ""
-    textInputConfirmPassword.focus = true
-  }
-
-  onAccepted: {
-    if (walletIsImporting) {
-      rectangleImportWalletFromKeys.enteredPasswordConfirmation(
-            textInputConfirmPassword.text)
-    } else {
-      rectangleCreateWallet.enteredPasswordConfirmation(
-            textInputConfirmPassword.text)
-    }
-  }
 }
