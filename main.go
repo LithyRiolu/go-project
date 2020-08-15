@@ -239,7 +239,7 @@ func getAndDisplayAddress() {
 
 func getAndDisplayConnectionInfo() {
 
-	syncing, walletBlockCount, knownBlockCount, localDaemonBlockCount, peers, err := walletdmanager.RequestConnectionInfo()
+	syncing, walletBlockCount, knownBlockCount, peers, err := walletdmanager.RequestConnectionInfo()
 	if err != nil {
 		log.Info("error getting connection info: ", err)
 		return
@@ -252,28 +252,13 @@ func getAndDisplayConnectionInfo() {
 		walletBlockCountString += " (" + humanize.FormatInteger("#,###.", percentageSync) + "%)"
 	}
 
-	localDaemonBlockCountString := "..."
-	if localDaemonBlockCount > 1 {
-		localDaemonBlockCountString = humanize.FormatInteger("#,###.", localDaemonBlockCount)
-		// add percentage info if not synced
-		if knownBlockCount-localDaemonBlockCount > 2 {
-			percentageSync := int(math.Floor(100 * (float64(localDaemonBlockCount) / float64(knownBlockCount))))
-			localDaemonBlockCountString += " (" + humanize.FormatInteger("#,###.", percentageSync) + "%)"
-		}
-	}
-
 	knownBlockCountString := "..."
 	if knownBlockCount > 1 {
 		knownBlockCountString = humanize.FormatInteger("#,###.", knownBlockCount)
 	}
 
-	syncingInfo := "wallet: " + walletBlockCountString + " - node: " + localDaemonBlockCountString + "  (" + knownBlockCountString + " blocks - " + strconv.Itoa(peers) + " peers)"
+	syncingInfo := "wallet: " + walletBlockCountString + "  (" + knownBlockCountString + " blocks - " + strconv.Itoa(peers) + " peers)"
 	qmlBridge.DisplaySyncingInfo(syncing, syncingInfo)
-
-	qmlBridge.DisplayHeights(walletHeight, blockchainHeight, nodeHeight)
-	walletHeight := walletBlockCountString
-	blockchainHeight := knownBlockCountString
-	nodeHeight := localDaemonBlockCountString
 
 	// when not connected to remote node, the knownBlockCount stays at 1. So inform users if there seems to be a connection problem
 	if useRemoteNode {

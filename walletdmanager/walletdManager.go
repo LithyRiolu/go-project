@@ -127,7 +127,7 @@ func RequestAddress() (address string, err error) {
 // RequestListTransactions provides the list of transactions of current wallet
 func RequestListTransactions() (transfers []walletdrpc.Transfer, err error) {
 
-	walletBlockCount, _, _, _, err := walletdrpc.RequestStatus(rpcPassword)
+	walletBlockCount, _, _, err := walletdrpc.RequestStatus(rpcPassword)
 	if err != nil {
 		log.Error("error getting block count: ", err)
 		return nil, err
@@ -487,7 +487,7 @@ func StartWalletd(walletPath string, walletPassword string, useRemoteNode bool, 
 	}
 
 	// check rpc connection with walletd
-	_, _, _, _, err = walletdrpc.RequestStatus(rpcPassword)
+	_, _, _, err = walletdrpc.RequestStatus(rpcPassword)
 	if err != nil {
 		killWalletd()
 		return errors.New("error communicating with walletd via rpc")
@@ -787,18 +787,18 @@ func CreateWallet(walletFilename string, walletPassword string, walletPasswordCo
 }
 
 // RequestConnectionInfo provides the blockchain sync status and the number of connected peers
-func RequestConnectionInfo() (syncing string, walletBlockCount int, knownBlockCount int, localDaemonBlockCount int, peerCount int, err error) {
+func RequestConnectionInfo() (syncing string, walletBlockCount int, knownBlockCount int, peerCount int, err error) {
 
-	walletBlockCount, knownBlockCount, localDaemonBlockCount, peerCount, err = walletdrpc.RequestStatus(rpcPassword)
+	walletBlockCount, knownBlockCount, peerCount, err = walletdrpc.RequestStatus(rpcPassword)
 	if err != nil {
-		return "", 0, 0, 0, 0, err
+		return "", 0, 0, 0, err
 	}
 
 	stringWait := " (No transfers allowed)"
 	if knownBlockCount == 0 {
 		WalletdSynced = false
 		syncing = "Getting block count..." + stringWait
-	} else if walletBlockCount < knownBlockCount-1 || walletBlockCount > knownBlockCount+10 || localDaemonBlockCount < knownBlockCount-1 || localDaemonBlockCount > knownBlockCount+10 {
+	} else if walletBlockCount < knownBlockCount-1 || walletBlockCount > knownBlockCount+10 {
 		// second condition handles cases when knownBlockCount is off and smaller than the blockCount
 		WalletdSynced = false
 		syncing = "Syncing..." + stringWait
@@ -807,7 +807,7 @@ func RequestConnectionInfo() (syncing string, walletBlockCount int, knownBlockCo
 		syncing = "Synced"
 	}
 
-	return syncing, walletBlockCount, knownBlockCount, localDaemonBlockCount, peerCount, nil
+	return syncing, walletBlockCount, knownBlockCount, peerCount, nil
 }
 
 /*
