@@ -196,6 +196,14 @@ Item {
       }
     }
   }
+
+  Connections {
+    target: QmlBridge
+
+    onDisplayPathToPreviousWallet: {
+      walletFile.text = pathToPreviousWallet
+    }
+  }
 }
 
 /*##^##
