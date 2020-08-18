@@ -28,6 +28,8 @@ package walletdrpc
  * - /getMessagesFromExtra
  * - /estimateFusion
  * - /sendFusionTransaction
+ * - /createDeposit
+ * - /getDeposit
  * - @NEED: /getMnemonicSeed
  * - @NEED: /getFeeInfo
  */
@@ -341,6 +343,31 @@ func rpcPayloadSendFusionTransaction(
 		params)
 }
 
+/* /createDeposit ----------------------------------------------------- */
+func rpcPayloadCreateDeposit(
+  id int,
+  rpcPassword string,
+  params map[string]interface{}) rpcPayload {
+
+  return buildRPCPayload(
+    "createDeposit",
+    id,
+    rpcPassword,
+    params)
+}
+
+/* /getDeposit ----------------------------------------------------- */
+func rpcPayloadGetDeposit(
+  id int,
+  rpcPassword string,
+  params map[string]interface{}) rpcPayload {
+
+  return buildRPCPayload(
+    "getDeposit",
+    id,
+    rpcPassword,
+    params)
+}
 
 /* /getMnemonicSeed ----------------------------------------------------- */
 /*func rpcPayloadGetMnemonicSeed(

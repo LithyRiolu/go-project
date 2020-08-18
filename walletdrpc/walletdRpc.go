@@ -34,6 +34,59 @@ var (
 	rpcURL = "http://127.0.0.1:8070/json_rpc"
 )
 
+// CreateDeposit creates a new deposit using an address, the amount and term expressed in blocks.
+// i.e: term = 21900 means 21900 Blocks which is 1 Month on the Blockchain.
+func CreateDeposit(sourceAddress string, amount float64, term int, rpcPassword string) (transactionHash string, err error) {
+  amountInt := uint64(amount * 1000000) // expressed in 6* of CCX
+  
+  args := make(map[string]interface{})
+  args["amount"] = amountInt
+  args["sourceAddress"] = sourceAddress
+  args["term"] = term
+  payload := rpcPayloadCreateDeposit(0, rpcPassword, args)
+  
+  responseMap, err := httpRequest(payload)
+  if err != nil {
+    return "", errors.Wrap(err, "httpRequest failed")
+  }
+  
+  responseError := responseMap["error"]
+  if responseError != nil {
+    return "", errors.Wrap(errors.New(responseError.(map[string]interface{})["message"].(string)), "response with error")
+  }
+  
+  return responseMap["result"].(map[string]interface{})["transactionHash"].(string), nil
+}
+
+// GetDeposit shows the details of a deposit given the depositId.
+func GetDeposit(id string, rpcPassword string) (amount float64, height int, intrest float64, locked bool, term int, unlockHeight int, err error) {
+  args := make(map[string]interface{})
+  args["depositId"] = id
+
+  payload := rpcPayloadGetDeposit(0, rpcPassword, args)
+  amountInt = int(responseMap["result"].(map[string]interface{})["amount"].(float64))
+  height = int(responseMap["result"].(map[string]interface{})["height"].(float64))
+  intrestInt = int(responseMap["result"].(map[string]interface{})["intrest"].(float64))
+  locked = bool(responseMap["result"].(map[string]interface{})["locked"].(bool))
+  term = int(responseMap["result"].(map[string]interface{})["term"].(float64))
+  unlockHeight = int(responseMap["result"].(map[string]interface{})["unlockHeight"].(float64))
+  
+  amountInt := uint64(amount * 1000000) // expressed in 6* of CCX
+  intrestInt := uint64(intrest * 1000000) // expressed in 6* of CCX
+  
+  responseMap, err := httpRequest(payload)
+  if err != nil {
+    return "", errors.Wrap(err, "httpRequest failed")
+  }
+  
+  responseError := responseMap["error"]
+  if responseError != nil {
+    return "", errors.Wrap(errors.New(responseError.(map[string]interface{})["message"].(string)), "response with error")
+  }
+  
+  return amount, height, intrest, locked, term, unlockHeight, nil
+}
+
 // RequestBalance provides the available and locked balances of the current wallet
 // returned balances are expressed in CCX, not in 0.001 CCX
 func RequestBalance(rpcPassword string) (availableBalance float64, lockedBalance float64, totalBalance float64, err error) {
