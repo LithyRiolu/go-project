@@ -1,0 +1,55 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup MSBuild.exe
+        uses: warrenbuckley/Setup-MSBuild@v1
+
+      # https://github.com/actions/setup-go
+      - name: Setup Go
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.13.1' # The Go version to download (if necessary) and use.
+      - run: go version
+      - run: go get github.com/atotto/clipboard github.com/dustin/go-humanize github.com/mattn/go-sqlite3 github.com/mcuadros/go-version github.com/mitchellh/go-ps github.com/pkg/errors
+
+      - name: Build
+        shell: powershell
+        id: build
+        run: |
+          $build_folder = "build"
+          $sha = "${{ github.sha }}"
+          $ccx_ver = $sha.SubString(0,7)
+          $release_name = "stash-gui-win64-(ccx-v$ccx_ver)"
+          qtdeploy build desktop
+          cd deploy/Windows
+          Compress-Archive -Path *.exe -DestinationPath "$release_name.zip"
+          $sha256 = (Get-FileHash "$release_name.zip").Hash
+          $asset_path = "./$build_folder/src/Release/$release_name.zip"
+          mkdir "$release_name"
+          cp *.exe "$release_name/"
+          echo "::set-output name=sha256::${sha256}"
+          echo "::set-output name=release_name::${release_name}.zip"
+          echo "::set-output name=asset_path::${asset_path}"
+          echo "::set-output name=ccx_ver::${ccx_ver}"
+          echo "::set-output name=artifact_path::$build_folder/src/Release/$release_name"
+
+      - name: Upload To GH Artifacts
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: ${{ steps.build.outputs.release_name }}
+          path: ${{ steps.build.outputs.artifact_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
