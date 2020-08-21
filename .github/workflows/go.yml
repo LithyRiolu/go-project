@@ -18,11 +18,11 @@ jobs:
 
       # https://github.com/actions/setup-go
       - name: Setup Go
+        id: go
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
         with:
           go-version: '^1.13.1' # The Go version to download (if necessary) and use.
-      - run: go version
       - run: go get github.com/atotto/clipboard github.com/dustin/go-humanize github.com/mattn/go-sqlite3 github.com/mcuadros/go-version github.com/mitchellh/go-ps github.com/pkg/errors
 
       - name: Build
